@@ -6,34 +6,46 @@ const nomesPadrao = ['Café da manhã', 'Almoço', 'Janta', 'Lanche', 'Ceia'];
 
 export default function EditMetas() {
   const [refeicoes, setRefeicoes] = useState([]);
+  const [token, setToken] = useState("");
   const router = useRouter();
   const { id } = router.query;
-  const getToken = localStorage.getItem("token");
 
-  
+  // ✅ Pega token do localStorage com segurança
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedToken = localStorage.getItem("token");
+      if (savedToken) setToken(savedToken);
+    }
+  }, []);
 
   // 🚀 Carrega dados do backend
   useEffect(() => {
+    if (!id || !token) return;
 
     async function fetchObjetivo() {
-      const res = await fetch("/api/admin/get-objetivo-dieta", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_client: id }),
-      });
+      try {
+        const res = await fetch("/api/admin/get-objetivo-dieta", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id_client: id }),
+        });
 
-      const data = await res.json();
-      const recebidas = data[0]?.contentrefeicaonutri?.refeicoes;
+        const data = await res.json();
+        const recebidas = data[0]?.contentrefeicaonutri?.refeicoes;
 
-      // Garante que seja array, mesmo que venha como objeto
-      const lista = Array.isArray(recebidas) ? recebidas : Object.values(recebidas || {});
-      setRefeicoes(lista);
+        // Garante que seja array, mesmo que venha como objeto
+        const lista = Array.isArray(recebidas)
+          ? recebidas
+          : Object.values(recebidas || {});
+        setRefeicoes(lista);
+      } catch (err) {
+        console.error("Erro ao buscar objetivo:", err);
+      }
     }
 
     fetchObjetivo();
-  }, []);
+  }, [id, token]);
 
-  // 🚀 Calcula calorias com base nos macros
   const calcularCalorias = (refeicao) => {
     const c = parseFloat(refeicao.carboidratos || 0);
     const p = parseFloat(refeicao.proteinas || 0);
@@ -41,7 +53,6 @@ export default function EditMetas() {
     return c * 4 + p * 4 + g * 8;
   };
 
-  // 🚀 Atualiza um campo da refeição
   const atualizarRefeicao = (index, campo, valor) => {
     const novas = [...refeicoes];
     novas[index][campo] = valor;
@@ -67,7 +78,6 @@ export default function EditMetas() {
     setRefeicoes(novas);
   };
 
-  // 🚀 Função de salvar
   const salvarRefeicao = async () => {
     const contentrefeicaonutri = {
       refeicoes: Object.assign({}, refeicoes), // transforma em objeto
@@ -83,7 +93,7 @@ export default function EditMetas() {
     }, {});
 
     const payload = {
-      token: getToken,
+      token: token,
       id_client: id,
       meta_protein: totalProteinas,
       meta_carboidratos: totalCarboidratos,
@@ -104,12 +114,13 @@ export default function EditMetas() {
 
       if (!res.ok) {
         console.error("Erro ao salvar:", data?.error || "Erro desconhecido");
+        alert("Erro ao salvar dados.");
         return;
       }
 
       alert("Objetivo atualizado com sucesso!");
     } catch (error) {
-      console.error("Erro ao buscar dados:", error);
+      console.error("Erro ao salvar dados:", error);
       alert("Erro inesperado. Tente novamente.");
     }
   };
@@ -166,10 +177,13 @@ export default function EditMetas() {
           </button>
         </div>
       ))}
+
       <div className={styles.acoes}>
         <button onClick={adicionarRefeicao}>Nova Refeição</button>
       </div>
+
       <div className={styles.totalDieta}>Total Calorias da Dieta: {totalCalorias}</div>
+
       <button onClick={salvar} className={styles.salvar}>
         Salvar Dieta
       </button>
