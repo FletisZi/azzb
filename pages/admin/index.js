@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ListaAlunos from "/components/admin/listaalunos";
-import {  Montserrat } from 'next/font/google';
+import { Montserrat } from "next/font/google";
 import Header from "components/admin/header";
 
-
 const montserrat = Montserrat({
-subsets: ['latin'],
-weight: ['400', '600', '700'],
-variable: '--font-montserrat',
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-montserrat",
 });
-
-
 
 export default function HomeAdmin() {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
+  const [verificando, setVerificando] = useState(true); // estado para controlar loading
 
   useEffect(() => {
+    // Impede execução no servidor durante build
+    if (typeof window === "undefined") return;
+
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -25,7 +26,6 @@ export default function HomeAdmin() {
       return;
     }
 
-    // Opcional: valida o token com o backend
     fetch("/api/client/auth/verify-token", {
       headers: {
         authorization: `Bearer ${token}`,
@@ -42,10 +42,14 @@ export default function HomeAdmin() {
       .catch(() => {
         localStorage.removeItem("token");
         router.push("/admin/login");
+      })
+      .finally(() => {
+        setVerificando(false);
       });
-  }, []);
+  }, [router]);
 
-  if (!authorized) return null; // ou um loading...
+  if (verificando) return <p>Verificando autenticação...</p>;
+  if (!authorized) return null;
 
   return (
     <div className={montserrat.variable}>

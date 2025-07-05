@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useRouter } from "next/router";
 
@@ -7,28 +6,42 @@ export default function LoginPage() {
   const [number, setNumber] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("/api/client/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ number, password }),
-    });
+    setError("");
+    setLoading(true);
 
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/client/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ number, password }),
+      });
 
-    if (!res.ok) {
-      setError(data.error || "Erro ao fazer login");
-      return;
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Erro ao fazer login");
+        return;
+      }
+
+      // Garante que está no navegador
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", data.token);
+      }
+
+      router.push("/admin");
+    } catch (err) {
+      console.error("Erro de rede:", err);
+      setError("Erro de rede. Tente novamente mais tarde.");
+    } finally {
+      setLoading(false);
     }
-
-    localStorage.setItem("token", data.token);
-
-    router.push("/admin");
   };
 
   return (
@@ -54,7 +67,9 @@ export default function LoginPage() {
           style={styles.input}
         />
 
-        <button type="submit" style={styles.button}>Entrar</button>
+        <button type="submit" style={styles.button} disabled={loading}>
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
       </form>
     </div>
   );
@@ -97,6 +112,8 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "1rem",
+    opacity: 1,
+    transition: "opacity 0.3s",
   },
   error: {
     color: "red",

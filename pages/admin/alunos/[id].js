@@ -1,37 +1,38 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styles from "./layout.module.css";
-import Toast from "/components/admin/toast"
-import {  Montserrat } from 'next/font/google';
+import Toast from "/components/admin/toast";
+import { Montserrat } from "next/font/google";
 import Header from "components/admin/header";
 
 const montserrat = Montserrat({
-subsets: ['latin'],
-weight: ['400', '600', '700'],
-variable: '--font-montserrat',
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-montserrat",
 });
 
 export default function EditarAluno() {
   const router = useRouter();
   const { id } = router.query;
+
   const [aluno, setAluno] = useState(null);
   const [nome, setNome] = useState("");
-  const [senha, setSenha] = useState(""); 
+  const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [carregando, setCarregando] = useState(true);
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    if (typeof window === "undefined" || !id) return;
 
-    if (!id || !token) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
     async function fetchAluno() {
       try {
         const response = await fetch("/api/users");
         const data = await response.json();
         const encontrado = data.find((aluno) => aluno.id === parseInt(id));
-  
 
         if (encontrado) {
           setAluno(encontrado);
@@ -48,8 +49,17 @@ export default function EditarAluno() {
     fetchAluno();
   }, [id]);
 
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   async function atualizarCliente(event) {
     event.preventDefault();
+
+    if (typeof window === "undefined") return;
 
     const token = localStorage.getItem("token");
 
@@ -65,11 +75,12 @@ export default function EditarAluno() {
           password: senha,
         }),
       });
- 
+
       const data = await response.json();
 
       if (!response.ok) {
         setMensagem(`Erro: ${data.error || "Erro desconhecido"}`);
+        setToast({ mensagem: `Erro: ${data.error || "Erro desconhecido"}`, tipo: "erro" });
         return;
       }
 
@@ -78,11 +89,10 @@ export default function EditarAluno() {
     } catch (error) {
       console.error("Erro ao atualizar:", error);
       setMensagem("Erro de rede. Tente novamente mais tarde.");
-      setToast({ mensagem: `Erro: ${data.error || "Erro desconhecido"}`, tipo: "erro" });
+      setToast({ mensagem: "Erro de rede. Tente novamente mais tarde.", tipo: "erro" });
     }
   }
 
-  setTimeout(() => setToast(null), 6000);
   if (carregando) return <p>Carregando...</p>;
   if (!aluno) return <p>Aluno não encontrado.</p>;
 
@@ -90,7 +100,6 @@ export default function EditarAluno() {
     <>
       <Header url="" />
       <div className={`${montserrat.variable} ${styles.container}`}>
-        
         {toast && (
           <Toast
             mensagem={toast.mensagem}
@@ -98,7 +107,7 @@ export default function EditarAluno() {
             onClose={() => setToast(null)}
           />
         )}
-        
+
         <h1 className={styles.titulo}>Editar Perfil de {aluno.name}</h1>
 
         <form className={styles.form} onSubmit={atualizarCliente}>
@@ -110,7 +119,7 @@ export default function EditarAluno() {
               type="text"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-            /> 
+            />
           </div>
 
           <div className={styles.campo}>
@@ -125,7 +134,12 @@ export default function EditarAluno() {
 
           <div className={styles.campo}>
             <label>Dieta</label>
-            <botton onClick={(e)=>{e.preventDefault; router.push(`/admin/alunos/dieta/${id}`)}}>Teste</botton>
+            <button
+              type="button"
+              onClick={() => router.push(`/admin/alunos/dieta/${id}`)}
+            >
+              Acessar Dieta
+            </button>
           </div>
 
           <div className={styles.campo}>

@@ -1,6 +1,6 @@
 import Header from "components/admin/header";
 import styles from "./layout.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import EditMetas from "components/admin/editMetas";
 
@@ -9,11 +9,26 @@ export default function Dieta() {
   const [metaCarboidratos, setMetaCarboidratos] = useState("");
   const [metaProteinas, setMetaProteinas] = useState("");
   const [metaGorduras, setMetaGorduras] = useState("");
+  const [idClient, setIdClient] = useState(null);
+
   const router = useRouter();
-  const { id } = router.query;
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { id } = router.query;
+      if (id) {
+        setIdClient(id);
+      }
+    }
+  }, [router.isReady, router.query]);
 
   async function insertRefeicao(e) {
     e.preventDefault();
+
+    if (!idClient) {
+      console.warn("ID do cliente ainda não carregado");
+      return;
+    }
 
     const res = await fetch("/api/client/insert-dieta", {
       method: "POST",
@@ -21,7 +36,7 @@ export default function Dieta() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id_client: id,
+        id_client: idClient,
         meta_protein: metaProteinas,
         meta_carboidratos: metaCarboidratos,
         meta_gordura: metaGorduras,
@@ -43,9 +58,14 @@ export default function Dieta() {
 
   return (
     <>
-        <Header url="" />
+      <Header url="" />
 
-        <EditMetas />
+      <EditMetas />
+
+      {/* Exemplo de uso do insertRefeicao (botão de teste) */}
+      <button onClick={insertRefeicao} disabled={!idClient}>
+        Enviar dieta
+      </button>
     </>
   );
 }
