@@ -9,7 +9,6 @@ export default async function handler(req, res) {
   const { id } = req.query;
   const { name, password } = req.body;
 
-  
 
   // Verificação do token
   const user = verifyToken(req);

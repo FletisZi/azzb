@@ -2,15 +2,23 @@ import { useState, useEffect } from "react";
 import Logo from "components/logo";
 import styles from "./configureHome.module.css";
 import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/router";
 
 export default function ConfigureHome({ setActiveComponent }) {
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
   const [id, setId] = useState(null);
   const [token, setToken] = useState("");
+  const router = useRouter();
 
   // Pega o token do localStorage e decodifica
+
   useEffect(() => {
+
+    
+    const { id } = router.query;
+    setId(id)
+
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       const decoded = jwtDecode(storedToken);
