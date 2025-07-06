@@ -4,7 +4,7 @@ import styles from "./configureHome.module.css";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/router";
 
-export default function ConfigureHome({ setActiveComponent }) {
+export default function ConfigureHome({ setActiveComponent, setToast }) {
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
   const [id, setId] = useState(null);
@@ -31,7 +31,8 @@ export default function ConfigureHome({ setActiveComponent }) {
     e.preventDefault(); // impede o refresh da página
 
     if (!senha) {
-      alert("Digite uma nova senha.");
+      setToast({ mensagem: "Digite uma nova senha.", tipo: "erro" });
+      // alert("Digite uma nova senha.");
       return;
     }
 
@@ -48,11 +49,13 @@ export default function ConfigureHome({ setActiveComponent }) {
       });
 
       if (response.ok) {
-        alert("Senha atualizada com sucesso!");
+        setToast({ mensagem: "Senha atualizada com sucesso!", tipo: "sucesso" });
         setSenha(""); // limpa o campo
       } else {
         const data = await response.json();
-        alert("Erro ao atualizar senha: " + data.error);
+        
+        setToast({ mensagem: "Erro ao atualizar senha:" + data.error, tipo: "erro" });
+        //alert("Erro ao atualizar senha: " + data.error);
       }
     } catch (error) {
       console.error("Erro ao atualizar senha:", error);

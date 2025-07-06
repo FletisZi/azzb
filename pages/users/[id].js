@@ -30,7 +30,7 @@ export default function Users() {
     if (activeComponent === "graficDieta") return <GraficHeader setActiveComponent={setActiveComponent} setDataIndex={setDataIndex} />;
     if (activeComponent === "cadastroDieta") return <DietaCadastro setActiveComponent={setActiveComponent} />;
     if (activeComponent === "editDietas") return <EditConsumoDiario setActiveComponent={setActiveComponent} index={dataIndex} setToast={setToast} />;
-    if (activeComponent === "configuracao") return <ConfigureHome setActiveComponent={setActiveComponent} />;
+    if (activeComponent === "configuracao") return <ConfigureHome setActiveComponent={setActiveComponent} setToast={setToast} />;
     return null;
   };
 
