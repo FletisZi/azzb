@@ -100,6 +100,9 @@ export default function Users() {
       <div className={styles.wrapper}>
         {renderComponent()}
       </div>
+      <div className={styles.marginBot}>
+
+      </div>
     </div>
   );
 }
