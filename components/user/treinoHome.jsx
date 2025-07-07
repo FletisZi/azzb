@@ -10,9 +10,9 @@ export default function TreinoHome({ setActiveComponent }){
                 <Logo />
                 <button onClick={() => setActiveComponent("")} className={styles.btnVoltar}>Voltar</button>
             </div>
-            <ListDiaTreino />
+            <ListDiaTreino /> 
             <div className={styles.wrapperLinks}>
-                <a className={styles.btnLinks} onClick={() => setActiveComponent("treino")}><div className={styles.wraperTextLink}> Iniciar Treino <div className={styles.iconLinks}><CirclePlay  color="#FFFFFF" size={26} /> </div></div></a>
+                <a className={styles.btnLinks} onClick={() => setActiveComponent("treinopage")}><div className={styles.wraperTextLink}> Iniciar Treino <div className={styles.iconLinks}><CirclePlay  color="#FFFFFF" size={26} /> </div></div></a>
                 <a className={styles.btnLinks} onClick={() => setActiveComponent("dieta")}><div className={styles.wraperTextLink}> Minha Dieta <div className={styles.iconLinks}><Salad  color="#FFFFFF" size={26} /></div></div></a>
             </div>
         </div>

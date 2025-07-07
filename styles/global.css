@@ -1,12 +1,16 @@
-*{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-body{
+body {
   background-color: #57c5f0;
 }
 
 svg:focus {
   outline: none;
+}
+
+.ytp-shorts-mode {
+  height: 40px;
 }

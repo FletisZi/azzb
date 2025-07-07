@@ -1,0 +1,148 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 2.25rem;
+}
+
+.btnVoltar {
+  background-color: #fff6f6;
+  width: 80px;
+  height: 50px;
+  border-radius: 60px;
+  border: none;
+  box-shadow: 0px 3px 10px 3px rgb(70 65 65 / 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.btnVoltar:hover {
+  cursor: pointer;
+  background-color: #f8eded;
+}
+
+.selectTraining {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-evenly;
+  width: 95%;
+  max-width: 650px;
+  height: 80px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #464141;
+  background-color: #fff6f6;
+  border-radius: 15px;
+  box-shadow: 0px 3px 10px 3px rgb(70 65 65 / 25%);
+  transition: 0.4s ease;
+  margin: 0 auto;
+}
+
+.selectTraining:hover {
+  cursor: pointer;
+  background-color: #f8eded;
+}
+
+.tabelaTreino {
+  margin: 0 auto;
+  margin-top: 20px;
+  font-family: "Montserrat", sans-serif;
+  background: #fffdfd;
+  border-radius: 12px;
+  padding: 16px;
+  width: 90%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.cabecalho {
+  display: grid;
+  text-align: center;
+  grid-template-columns: 2fr 1fr 1fr 0.5fr;
+  font-weight: bold;
+  color: #555;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.linha {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 0.5fr;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.iconeNome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icone {
+  width: 40px;
+  height: 40px;
+  background-color: #d2f0fd;
+  border-radius: 50%;
+}
+
+.musculo {
+  font-size: 12px;
+  color: #888;
+}
+
+.status {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #00b3ff;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.feito {
+  background-color: #c5f900;
+  border-color: #c5f900;
+}
+
+.btnFinalizar {
+  margin-top: 20px;
+  background-color: #00b3ff;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+}
+
+.alingItems {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 650px) {
+  .cabecalho {
+    font-size: 10px;
+  }
+  .linha {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 450px) {
+  .selectTraining {
+    font-size: 1rem;
+    height: 50px;
+  }
+}

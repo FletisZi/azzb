@@ -12,6 +12,7 @@ import DietaCadastro from "components/user/dietaCadastro";
 import EditConsumoDiario from "components/user/components/editConsumoDiario";
 import Toast from "components/admin/toast";
 import ConfigureHome from "components/user/configureHome";
+import TreinoPage from "components/user/components/treinoPage";
 
 export default function Users() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function Users() {
     if (activeComponent === "cadastroDieta") return <DietaCadastro setActiveComponent={setActiveComponent} />;
     if (activeComponent === "editDietas") return <EditConsumoDiario setActiveComponent={setActiveComponent} index={dataIndex} setToast={setToast} />;
     if (activeComponent === "configuracao") return <ConfigureHome setActiveComponent={setActiveComponent} setToast={setToast} />;
+    if (activeComponent === "treinopage") return <TreinoPage setActiveComponent={setActiveComponent} setToast={setToast} />;
     return null;
   };
 
