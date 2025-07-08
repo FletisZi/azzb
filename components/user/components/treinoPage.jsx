@@ -1,21 +1,27 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import styles from "./treinoPage.module.css";
 import Logo from "components/logo";
-import ShortCard from "./shotcard";
-import ShortThumbnail from "./imgshortcard";
+import BuscarListaExercicio from "controller/buscar-lista-exercicio";
+import BuscarDadosExercicio from "controller/buscar-dados-exercicio";
+import { Check } from "lucide-react";
 
 export default function TreinoPage({ setActiveComponent }) {
   const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(true);
-  const [treinos, setTreinos] = useState([]);
+  const [loadingExercicios, setLoadingExercicios] = useState(false);
   const [treinoSelecionado, setTreinoSelecionado] = useState(null);
+  const [listaExercicio, setListaExercicio] = useState([]);
+  const [seriesTreino, setSeriesTreino] = useState([]);
+  const [exercicios, setExercicios] = useState([]);
   const [exerciciosConcluidos, setExerciciosConcluidos] = useState({});
 
+  // Carrega treinos e lista de exercícios ao iniciar
   useEffect(() => {
     if (!router.isReady || !router.query.id) return;
 
-    async function fetchTreinos() {
+    async function fetchDadosIniciais() {
       const token = localStorage.getItem("token");
       if (!token) {
         console.warn("Token não encontrado.");
@@ -23,52 +29,64 @@ export default function TreinoPage({ setActiveComponent }) {
       }
 
       try {
-        const response = await fetch("/api/client/show-training-list", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token,
-            id_client: router.query.id,
-          }),
-        });
-
-        const result = await response.json();
-        setTreinos(result);
+        const lista = await BuscarListaExercicio(router.query.id, token);
+        setListaExercicio(lista);
       } catch (error) {
-        console.error("Erro ao buscar treinos:", error);
+        console.error("Erro ao buscar dados iniciais:", error);
       } finally {
         setIsLoading(false);
       }
     }
 
-    fetchTreinos();
+    fetchDadosIniciais();
   }, [router.isReady, router.query.id]);
 
-  function handleSelecionarTreino(idTreino) {
-    const treino = treinos.find((t) => t.id === Number(idTreino));
+  // Quando o usuário seleciona um treino
+  async function handleSelect(idTreino) {
+    const treino = listaExercicio.find((dado) => dado.id == idTreino);
+    if (!treino) return;
+
+    setLoadingExercicios(true);
     setTreinoSelecionado(treino);
 
-    // Inicializa os exercícios como não concluídos
-    const estadoInicial = {};
+    const listaExercicios = treino.exercicios.exercicios;
+    setSeriesTreino(listaExercicios);
 
-    Object.keys(treino.exercicio).forEach((nome) => {
-      estadoInicial[nome] = false;
-    });
-    setExerciciosConcluidos(estadoInicial);
+    try {
+      const detalhes = await Promise.all(
+        listaExercicios.map((item) => BuscarDadosExercicio(item.id))
+      );
+
+      const normalizado = detalhes.map((item) => item[0]); // Simplificado
+      setExercicios(normalizado);
+
+      const estadoInicial = {};
+      normalizado.forEach((dado) => {
+        if (dado?.name) estadoInicial[dado.name] = false;
+      });
+      setExerciciosConcluidos(estadoInicial);
+    } catch (error) {
+      console.error("Erro ao carregar detalhes dos exercícios:", error);
+    } finally {
+      setLoadingExercicios(false);
+    }
   }
 
-  function toggleExercicio(nome) {
+  // Marcar exercício como feito/não feito
+  const toggleExercicio = useCallback((nome) => {
     setExerciciosConcluidos((prev) => ({
       ...prev,
       [nome]: !prev[nome],
     }));
-  }
+  }, []);
+
+  // Finalizar treino
   function finalizarTreino() {
     const concluido = Object.entries(exerciciosConcluidos)
       .filter(([_, feito]) => feito)
       .map(([nome]) => nome);
 
-    const dataHoje = getDataHojeSaoPaulo(); // <<< AQUI pega a data certa
+    const dataHoje = getDataHojeSaoPaulo();
 
     const resultadoFinal = {
       id_treino: treinoSelecionado.id,
@@ -81,17 +99,15 @@ export default function TreinoPage({ setActiveComponent }) {
     alert("Treino finalizado! Veja o console.");
   }
 
-  // Coloca essa função fora do componente, mas no mesmo arquivo:
+  // Obter data de hoje no fuso de SP
   function getDataHojeSaoPaulo() {
     const hoje = new Date();
-
     const formatador = new Intl.DateTimeFormat("pt-BR", {
       timeZone: "America/Sao_Paulo",
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
     });
-
     return formatador.format(hoje);
   }
 
@@ -106,75 +122,109 @@ export default function TreinoPage({ setActiveComponent }) {
           Voltar
         </button>
       </div>
+
       <div style={{ padding: "20px" }}>
         {isLoading ? (
-          <p>Carregando...</p>
+          <p>Carregando treinos...</p>
         ) : (
           <>
-            {/* Select de treino */}
+            {/* Select de Treino */}
             <select
               defaultValue=""
-              onChange={(e) => handleSelecionarTreino(e.target.value)}
+              onChange={(e) => handleSelect(e.target.value)}
               className={styles.selectTraining}
             >
               <option value="" disabled>
                 Selecione um treino
               </option>
-              {treinos.map((treino) => (
+              {listaExercicio.map((treino) => (
                 <option key={treino.id} value={treino.id}>
                   {treino.name}
                 </option>
               ))}
             </select>
 
-            {/* Lista de exercícios */}
+            {/* Lista de Exercícios */}
             {treinoSelecionado && (
               <div style={{ marginTop: "20px" }}>
-                <div className={styles.tabelaTreino}>
-                  <div className={styles.cabecalho}>
-                    <span>Exercício</span>
-                    <span>Séries</span>
-                    <span>Repetições</span>
-                    <span></span>
-                  </div>
-
-                  {Object.entries(treinoSelecionado.exercicio).map(
-                    ([nome, dados]) => (
-                      <div className={styles.linha} key={nome}>
-                        <div className={styles.iconeNome}>
-                          <div className={styles.icone}></div>
-                          <div>
-                            <strong>{nome}</strong>
-                            <div className={styles.musculo}>
-                              {dados.musculo}
-                            </div>
+                {loadingExercicios ? (
+                  <p>Carregando exercícios...</p>
+                ) : (
+                  <div className={styles.tabelaTreino}>
+                    {exercicios.map((data, index) => (
+                      <div className={styles.linha} key={data.id}>
+                        <div className={styles.titleCards}>
+                          <div
+                            className={`${styles.alingItems} ${styles.leftItems}`}
+                          >
+                            {data.name}
+                          </div>
+                          <div className={styles.alingItems}>
+                            {seriesTreino[index]?.series}
+                          </div>
+                          <div className={styles.alingItems}>
+                            {seriesTreino[index]?.repeticoes}
                           </div>
                         </div>
-                        <div className={styles.alingItems}>{dados.series}</div>
-                        <div className={styles.alingItems}>
-                          {dados.repeticao}
-                        </div>
-                        <div className={styles.alingItems}>
-                          <span
-                            className={`${styles.status} ${
-                              exerciciosConcluidos[nome] ? styles.feito : ""
-                            }`}
-                            onClick={() => toggleExercicio(nome)}
-                          ></span>
-                        </div>
-                      </div>
-                    )
-                  )}
 
-                  <button
-                    onClick={finalizarTreino}
-                    className={styles.btnFinalizar}
-                  >
-                    Finalizar Treino
-                  </button>
-                </div>
-                <ShortThumbnail />
-                <ShortCard />
+                        <div className={styles.subTitleCards}>
+                          <div
+                            className={`${styles.alingItems} ${styles.leftItems}`}
+                          >
+                            {data.grupo_muscular || "Grupo muscular"}
+                          </div>
+                          <div className={styles.alingItems}>Séries</div>
+                          <div className={styles.alingItems}>Reps</div>
+                        </div>
+
+                        <div className={styles.wrapperButtons}>
+                          <button
+                            className={styles.btnPlay}
+                            aria-label={`Ver tutorial de ${data.name}`}
+                          >
+                            <img
+                              className={styles.image}
+                              src="/img/play.svg"
+                              alt="Tutorial"
+                            />
+                            Tutorial
+                          </button>
+                          <span></span>
+                          <div className={styles.alingItems}>
+                            <span
+                              className={`${styles.status}`}
+                              onClick={() => toggleExercicio(data.name)}
+                            >
+                              <Check
+                                size={14}
+                                color="#4AA7B0"
+                                strokeWidth={4}
+                                className={`${styles.naofeito} ${
+                                  exerciciosConcluidos[data.name]
+                                    ? styles.feito
+                                    : ""
+                                }`}
+                              />
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className={styles.textBottom}>
+                          {console.log(data)}
+                          {seriesTreino[index]?.descricao ||
+                            "Descrição do exercício..."}
+                        </p>
+                      </div>
+                    ))}
+
+                    <button
+                      onClick={finalizarTreino}
+                      className={styles.btnFinalizar}
+                    >
+                      Finalizar Treino
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </>
