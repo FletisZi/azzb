@@ -17,7 +17,7 @@ export default function TreinoPage({ setActiveComponent }) {
   const [exercicios, setExercicios] = useState([]);
   const [exerciciosConcluidos, setExerciciosConcluidos] = useState({});
 
-  // Carrega treinos e lista de exercícios ao iniciar
+  // Carrega treinos ao iniciar
   useEffect(() => {
     if (!router.isReady || !router.query.id) return;
 
@@ -30,7 +30,7 @@ export default function TreinoPage({ setActiveComponent }) {
 
       try {
         const lista = await BuscarListaExercicio(router.query.id, token);
-        setListaExercicio(lista);
+        setListaExercicio(lista || []);
       } catch (error) {
         console.error("Erro ao buscar dados iniciais:", error);
       } finally {
@@ -49,7 +49,7 @@ export default function TreinoPage({ setActiveComponent }) {
     setLoadingExercicios(true);
     setTreinoSelecionado(treino);
 
-    const listaExercicios = treino.exercicios.exercicios;
+    const listaExercicios = treino?.exercicios?.exercicios || [];
     setSeriesTreino(listaExercicios);
 
     try {
@@ -57,7 +57,8 @@ export default function TreinoPage({ setActiveComponent }) {
         listaExercicios.map((item) => BuscarDadosExercicio(item.id))
       );
 
-      const normalizado = detalhes.map((item) => item[0]); // Simplificado
+      // Filtra resultados válidos e evita erro de acesso
+      const normalizado = detalhes.map((item) => item?.[0]).filter(Boolean);
       setExercicios(normalizado);
 
       const estadoInicial = {};
@@ -72,7 +73,7 @@ export default function TreinoPage({ setActiveComponent }) {
     }
   }
 
-  // Marcar exercício como feito/não feito
+  // Alternar entre feito/não feito
   const toggleExercicio = useCallback((nome) => {
     setExerciciosConcluidos((prev) => ({
       ...prev,
@@ -99,7 +100,7 @@ export default function TreinoPage({ setActiveComponent }) {
     alert("Treino finalizado! Veja o console.");
   }
 
-  // Obter data de hoje no fuso de SP
+  // Data atual no fuso de SP
   function getDataHojeSaoPaulo() {
     const hoje = new Date();
     const formatador = new Intl.DateTimeFormat("pt-BR", {
@@ -139,7 +140,7 @@ export default function TreinoPage({ setActiveComponent }) {
               </option>
               {listaExercicio.map((treino) => (
                 <option key={treino.id} value={treino.id}>
-                  {treino.name}
+                  {treino.name || "Sem nome"}
                 </option>
               ))}
             </select>
@@ -151,71 +152,75 @@ export default function TreinoPage({ setActiveComponent }) {
                   <p>Carregando exercícios...</p>
                 ) : (
                   <div className={styles.tabelaTreino}>
-                    {exercicios.map((data, index) => (
-                      <div className={styles.linha} key={data.id}>
-                        <div className={styles.titleCards}>
-                          <div
-                            className={`${styles.alingItems} ${styles.leftItems}`}
-                          >
-                            {data.name}
-                          </div>
-                          <div className={styles.alingItems}>
-                            {seriesTreino[index]?.series}
-                          </div>
-                          <div className={styles.alingItems}>
-                            {seriesTreino[index]?.repeticoes}
-                          </div>
-                        </div>
+                    {exercicios.map((data, index) => {
+                      if (!data) return null;
 
-                        <div className={styles.subTitleCards}>
-                          <div
-                            className={`${styles.alingItems} ${styles.leftItems}`}
-                          >
-                            {data.grupo_muscular || "Grupo muscular"}
-                          </div>
-                          <div className={styles.alingItems}>Séries</div>
-                          <div className={styles.alingItems}>Reps</div>
-                        </div>
+                      const nome = data.name || `Exercício ${index + 1}`;
+                      const grupo = data.grupo_muscular || "Grupo muscular";
+                      const series = seriesTreino[index]?.series || "-";
+                      const reps = seriesTreino[index]?.repeticoes || "-";
+                      const descricao =
+                        seriesTreino[index]?.descricao ||
+                        "Descrição do exercício...";
 
-                        <div className={styles.wrapperButtons}>
-                          <button
-                            className={styles.btnPlay}
-                            aria-label={`Ver tutorial de ${data.name}`}
-                          >
-                            <img
-                              className={styles.image}
-                              src="/img/play.svg"
-                              alt="Tutorial"
-                            />
-                            Tutorial
-                          </button>
-                          <span></span>
-                          <div className={styles.alingItems}>
-                            <span
-                              className={`${styles.status}`}
-                              onClick={() => toggleExercicio(data.name)}
+                      return (
+                        <div className={styles.linha} key={data.id || index}>
+                          <div className={styles.titleCards}>
+                            <div
+                              className={`${styles.alingItems} ${styles.leftItems}`}
                             >
-                              <Check
-                                size={14}
-                                color="#4AA7B0"
-                                strokeWidth={4}
-                                className={`${styles.naofeito} ${
-                                  exerciciosConcluidos[data.name]
-                                    ? styles.feito
-                                    : ""
-                                }`}
-                              />
-                            </span>
+                              {nome}
+                            </div>
+                            <div className={styles.alingItems}>{series}</div>
+                            <div className={styles.alingItems}>{reps}</div>
                           </div>
-                        </div>
 
-                        <p className={styles.textBottom}>
-                          {console.log(data)}
-                          {seriesTreino[index]?.descricao ||
-                            "Descrição do exercício..."}
-                        </p>
-                      </div>
-                    ))}
+                          <div className={styles.subTitleCards}>
+                            <div
+                              className={`${styles.alingItems} ${styles.leftItems}`}
+                            >
+                              {grupo}
+                            </div>
+                            <div className={styles.alingItems}>Séries</div>
+                            <div className={styles.alingItems}>Reps</div>
+                          </div>
+
+                          <div className={styles.wrapperButtons}>
+                            <button
+                              className={styles.btnPlay}
+                              aria-label={`Ver tutorial de ${nome}`}
+                            >
+                              <img
+                                className={styles.image}
+                                src="/img/play.svg"
+                                alt="Tutorial"
+                              />
+                              Tutorial
+                            </button>
+                            <span></span>
+                            <div className={styles.alingItems}>
+                              <span
+                                className={styles.status}
+                                onClick={() => toggleExercicio(nome)}
+                              >
+                                <Check
+                                  size={14}
+                                  color="#4AA7B0"
+                                  strokeWidth={4}
+                                  className={`${styles.naofeito} ${
+                                    exerciciosConcluidos[nome]
+                                      ? styles.feito
+                                      : ""
+                                  }`}
+                                />
+                              </span>
+                            </div>
+                          </div>
+
+                          <p className={styles.textBottom}>{descricao}</p>
+                        </div>
+                      );
+                    })}
 
                     <button
                       onClick={finalizarTreino}
