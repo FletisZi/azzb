@@ -6,7 +6,7 @@ import BuscarListaExercicio from "controller/buscar-lista-exercicio";
 import BuscarDadosExercicio from "controller/buscar-dados-exercicio";
 import { Check } from "lucide-react";
 
-export default function TreinoPage({ setActiveComponent }) {
+export default function TreinoPage({ setActiveComponent, setToast }) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -82,34 +82,69 @@ export default function TreinoPage({ setActiveComponent }) {
   }, []);
 
   // Finalizar treino
-  function finalizarTreino() {
+  async function finalizarTreino() {
     const concluido = Object.entries(exerciciosConcluidos)
       .filter(([_, feito]) => feito)
       .map(([nome]) => nome);
 
-    const dataHoje = getDataHojeSaoPaulo();
+    const dataHoje = getDataHojeSaoPaulo(); // Ex: retorna "2025-07-09"
+    console.log(dataHoje);
 
-    const resultadoFinal = {
-      id_treino: treinoSelecionado.id,
-      nome_treino: treinoSelecionado.name,
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.warn("Token não encontrado.");
+      return;
+    }
+
+    const id_client = router.query.id;
+
+    if (!token || !treinoSelecionado || !id_client) {
+      alert("Faltam dados necessários para finalizar o treino.");
+      return;
+    }
+
+    const payload = {
+      id_client: parseInt(id_client), // ou Number(id_client)
+      id_rotina: treinoSelecionado.id,
       data: dataHoje,
       exercicios_concluidos: concluido,
+      token,
     };
 
-    console.log("Treino finalizado:", resultadoFinal);
-    alert("Treino finalizado! Veja o console.");
+    try {
+      const response = await fetch("/api/client/insert-treino", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const erro = await response.text();
+        console.error("Erro ao salvar treino:", erro);
+        alert("Erro ao finalizar treino.");
+        return;
+      }
+
+      setToast({
+        mensagem: "✅ Treino finalizado com sucesso!",
+        tipo: "sucesso",
+      });
+
+      setActiveComponent("treino");
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro na conexão com o servidor.");
+    }
   }
 
   // Data atual no fuso de SP
   function getDataHojeSaoPaulo() {
-    const hoje = new Date();
-    const formatador = new Intl.DateTimeFormat("pt-BR", {
-      timeZone: "America/Sao_Paulo",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    return formatador.format(hoje);
+    const agora = new Date();
+    const dataBrasil = new Date(agora.getTime() - 3 * 60 * 60 * 1000); // UTC-3
+    return dataBrasil.toISOString().split("T")[0]; // "YYYY-MM-DD"
   }
 
   return (
@@ -117,7 +152,7 @@ export default function TreinoPage({ setActiveComponent }) {
       <div className={styles.header}>
         <Logo />
         <button
-          onClick={() => setActiveComponent("")}
+          onClick={() => setActiveComponent("treino")}
           className={styles.btnVoltar}
         >
           Voltar

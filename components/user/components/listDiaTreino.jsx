@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import styles from "./listDiaTreino.module.css";
 import { useRouter } from "next/router";
-import { format } from "date-fns"; // Instalar com: npm install date-fns
-import { BadgeX, Check, X } from "lucide-react";
+import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz"; // Corrige o fuso
+import { Check, X } from "lucide-react";
 
 export default function ListDiaTreino() {
   const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
@@ -25,14 +26,15 @@ export default function ListDiaTreino() {
 
       const result = await response.json();
 
-      // Formatando datas dos treinos
+      // Corrigindo a formatação com UTC
       const treinosFormatados = result.map((treino) => ({
         ...treino,
-        dataFormatada: format(new Date(treino.data), "yyyy-MM-dd"),
+        dataFormatada: formatInTimeZone(treino.data, "UTC", "yyyy-MM-dd"),
       }));
 
       const hoje = new Date();
 
+      // Monta os últimos 7 dias + hoje
       const diasComTreino = Array.from({ length: 8 }, (_, i) => {
         const data = new Date();
         data.setDate(hoje.getDate() - (7 - i));
@@ -67,15 +69,13 @@ export default function ListDiaTreino() {
           <div key={i} className={styles.wrapperDia}>
             <div className={styles.dianumber}>{d.dia}</div>
             <div className={`${styles.dia} ${d.isHoje ? styles.inativo : ""}`}>
-              {
-                <div className={styles.iconLinks}>
-                  {d.treino ? (
-                    <Check color="white" size={16} strokeWidth={3} />
-                  ) : (
-                    <X color="white" size={16} strokeWidth={3} />
-                  )}
-                </div>
-              }
+              <div className={styles.iconLinks}>
+                {d.treino ? (
+                  <Check color="white" size={16} strokeWidth={3} />
+                ) : (
+                  <X color="white" size={16} strokeWidth={3} />
+                )}
+              </div>
             </div>
             <div className={styles.sigla}>{d.sigla}</div>
           </div>
