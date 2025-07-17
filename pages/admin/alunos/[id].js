@@ -4,6 +4,7 @@ import styles from "./layout.module.css";
 import Toast from "/components/admin/toast";
 import { Montserrat } from "next/font/google";
 import Header from "components/admin/header";
+import { BookPlus, FolderSymlink } from "lucide-react";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -80,16 +81,25 @@ export default function EditarAluno() {
 
       if (!response.ok) {
         setMensagem(`Erro: ${data.error || "Erro desconhecido"}`);
-        setToast({ mensagem: `Erro: ${data.error || "Erro desconhecido"}`, tipo: "erro" });
+        setToast({
+          mensagem: `Erro: ${data.error || "Erro desconhecido"}`,
+          tipo: "erro",
+        });
         return;
       }
 
       setMensagem("Cliente atualizado com sucesso!");
-      setToast({ mensagem: "Cliente atualizado com sucesso!", tipo: "sucesso" });
+      setToast({
+        mensagem: "Cliente atualizado com sucesso!",
+        tipo: "sucesso",
+      });
     } catch (error) {
       console.error("Erro ao atualizar:", error);
       setMensagem("Erro de rede. Tente novamente mais tarde.");
-      setToast({ mensagem: "Erro de rede. Tente novamente mais tarde.", tipo: "erro" });
+      setToast({
+        mensagem: "Erro de rede. Tente novamente mais tarde.",
+        tipo: "erro",
+      });
     }
   }
 
@@ -131,20 +141,28 @@ export default function EditarAluno() {
               onChange={(e) => setSenha(e.target.value)}
             />
           </div>
+          <div className={styles.wrapersLinksEdits}>
+            <div className={styles.conteinerButtons}>
+              <label className={styles.label}>Dieta</label>
+              <button
+                type="button"
+                onClick={() => router.push(`/admin/alunos/dieta/${id}`)}
+                className={styles.btnLinks}
+              >
+                <BookPlus strokeWidth={2} size={22} color="#FFF" />
+              </button>
+            </div>
 
-          <div className={styles.campo}>
-            <label>Dieta</label>
-            <button
-              type="button"
-              onClick={() => router.push(`/admin/alunos/dieta/${id}`)}
-            >
-              Acessar Dieta
-            </button>
-          </div>
-
-          <div className={styles.campo}>
-            <label>Treino</label>
-            <textarea placeholder="Descreva o plano de treino"></textarea>
+            <div className={styles.conteinerButtons}>
+              <label className={styles.label}>Treinos</label>
+              <button
+                type="button"
+                onClick={() => router.push(`/admin/alunos/treino/${id}`)}
+                className={styles.btnLinks}
+              >
+                <FolderSymlink strokeWidth={2} size={22} color="#FFF" />
+              </button>
+            </div>
           </div>
 
           <button type="submit" className={styles.botao}>

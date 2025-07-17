@@ -195,7 +195,7 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
                       const series = seriesTreino[index]?.series || "-";
                       const reps = seriesTreino[index]?.repeticoes || "-";
                       const descricao =
-                        seriesTreino[index]?.descricao ||
+                        seriesTreino[index]?.observacao ||
                         "Descrição do exercício...";
 
                       return (

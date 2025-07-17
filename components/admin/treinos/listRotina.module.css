@@ -1,0 +1,119 @@
+.container {
+  padding: 20px;
+  font-family: "Montserrat", sans-serif;
+  width: 90%;
+  max-width: 700px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  border-radius: 10px;
+  box-shadow: 1px 4px 8px 2px #00000040;
+  padding: 20px;
+  background-color: #fff6f6;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input {
+  padding: 8px;
+  font-size: 16px;
+}
+
+.botao {
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.botao:hover {
+  background-color: #4095f6;
+}
+
+.containerList {
+  width: 80%;
+  margin: 0 auto;
+  font-family: "Montserrat", sans-serif;
+}
+
+.btnNewRoteiro {
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  height: 30px;
+}
+
+.tagUL {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.tagLI {
+  list-style: none;
+  display: flex;
+  color: #194d8a;
+  font-weight: 800;
+  justify-content: space-between;
+}
+
+.iconList {
+  background-color: #c1e1f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.wrapperTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btnEdit {
+  background-color: #0070f3;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.btnEditTow {
+  background-color: #0070f3;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.btnEdit:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.btnEdit svg {
+  transition: transform 0.2s ease;
+}
+
+.btnEdit:hover svg {
+  transform: scale(1.1);
+}

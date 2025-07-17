@@ -1,0 +1,41 @@
+.container {
+  background-color: #efefef;
+  border-radius: 10px;
+  width: 96%;
+  margin: 1.25rem auto;
+  padding: 1rem 0;
+  max-height: 450px;
+  overflow: auto;
+  font-family: "Montserrat";
+}
+
+.buscarExercicios {
+  width: 60%;
+  padding: 8px;
+  display: flex;
+  margin: 0 auto;
+  border-radius: 15px;
+  border: 1px solid #8e8c8c;
+  margin-bottom: 16px;
+}
+
+.itens {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  width: 90%;
+  justify-content: space-between;
+}
+
+.btnSalvar {
+  margin-left: 10px;
+  padding: 4px 8px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

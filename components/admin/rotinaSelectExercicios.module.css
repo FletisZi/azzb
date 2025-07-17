@@ -1,0 +1,78 @@
+.container {
+  padding: 20px;
+}
+
+.grupos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background-color: #efefef;
+  border-radius: 10px;
+}
+
+.botaoGrupo {
+  padding: 10px;
+  color: #000;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 5px;
+  background-color: #fff6f6;
+  box-shadow: 0px 4px 8px 2px #00000040;
+  cursor: pointer;
+}
+
+.botaoGrupoSelecionado {
+  background-color: #4caf50;
+}
+
+.exercicios {
+  margin-top: 20px;
+}
+
+.exercicioItem {
+  margin-bottom: 10px;
+  display: flex;
+  background-color: #fff6f6;
+  border-radius: 15px;
+  box-shadow: 0px 4px 8px 2px #00000040;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 5px 0px;
+  justify-content: space-between;
+}
+
+.exercicioItem label {
+  margin-left: 10px;
+}
+
+.inputGrupo {
+  display: flex;
+  margin-right: 10px;
+}
+
+.labelGrupo {
+  display: flex;
+  font-size: 14px;
+}
+
+.labelGrupo input {
+  margin-left: 5px;
+  display: flex;
+  height: 20px;
+  width: 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #ebeaea;
+}
+
+.botaoSalvar {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
