@@ -57,6 +57,10 @@
   justify-content: center;
   border-radius: 50%;
 }
+
+.verde {
+  background-color: #1c9715;
+}
 @media (max-width: 600px) {
   .dia {
     width: 30px;

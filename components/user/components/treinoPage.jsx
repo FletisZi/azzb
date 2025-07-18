@@ -16,17 +16,16 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
   const [seriesTreino, setSeriesTreino] = useState([]);
   const [exercicios, setExercicios] = useState([]);
   const [exerciciosConcluidos, setExerciciosConcluidos] = useState({});
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [dadosModal, setDadosModal] = useState({ total: 0, concluido: 0 });
+  const [continuarFinalizar, setContinuarFinalizar] = useState(false);
 
-  // Carrega treinos ao iniciar
   useEffect(() => {
     if (!router.isReady || !router.query.id) return;
 
     async function fetchDadosIniciais() {
       const token = localStorage.getItem("token");
-      if (!token) {
-        console.warn("Token não encontrado.");
-        return;
-      }
+      if (!token) return;
 
       try {
         const lista = await BuscarListaExercicio(router.query.id, token);
@@ -41,7 +40,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     fetchDadosIniciais();
   }, [router.isReady, router.query.id]);
 
-  // Quando o usuário seleciona um treino
   async function handleSelect(idTreino) {
     const treino = listaExercicio.find((dado) => dado.id == idTreino);
     if (!treino) return;
@@ -57,7 +55,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
         listaExercicios.map((item) => BuscarDadosExercicio(item.id))
       );
 
-      // Filtra resultados válidos e evita erro de acesso
       const normalizado = detalhes.map((item) => item?.[0]).filter(Boolean);
       setExercicios(normalizado);
 
@@ -73,7 +70,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     }
   }
 
-  // Alternar entre feito/não feito
   const toggleExercicio = useCallback((nome) => {
     setExerciciosConcluidos((prev) => ({
       ...prev,
@@ -81,22 +77,24 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     }));
   }, []);
 
-  // Finalizar treino
   async function finalizarTreino() {
     const concluido = Object.entries(exerciciosConcluidos)
       .filter(([_, feito]) => feito)
       .map(([nome]) => nome);
 
-    const dataHoje = getDataHojeSaoPaulo(); // Ex: retorna "2025-07-09"
-    console.log(dataHoje);
+    const totalExercicios = Object.keys(exerciciosConcluidos).length;
+    const totalConcluidos = concluido.length;
 
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.warn("Token não encontrado.");
+    if (totalConcluidos < totalExercicios && !continuarFinalizar) {
+      setDadosModal({ total: totalExercicios, concluido: totalConcluidos });
+      setMostrarModal(true);
       return;
     }
 
+    setContinuarFinalizar(false);
+
+    const dataHoje = getDataHojeSaoPaulo();
+    const token = localStorage.getItem("token");
     const id_client = router.query.id;
 
     if (!token || !treinoSelecionado || !id_client) {
@@ -105,7 +103,7 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     }
 
     const payload = {
-      id_client: parseInt(id_client), // ou Number(id_client)
+      id_client: parseInt(id_client),
       id_rotina: treinoSelecionado.id,
       data: dataHoje,
       exercicios_concluidos: concluido,
@@ -115,9 +113,7 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     try {
       const response = await fetch("/api/client/insert-treino", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
@@ -140,11 +136,10 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     }
   }
 
-  // Data atual no fuso de SP
   function getDataHojeSaoPaulo() {
     const agora = new Date();
-    const dataBrasil = new Date(agora.getTime() - 3 * 60 * 60 * 1000); // UTC-3
-    return dataBrasil.toISOString().split("T")[0]; // "YYYY-MM-DD"
+    const dataBrasil = new Date(agora.getTime() - 3 * 60 * 60 * 1000);
+    return dataBrasil.toISOString().split("T")[0];
   }
 
   return (
@@ -164,7 +159,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
           <p>Carregando treinos...</p>
         ) : (
           <>
-            {/* Select de Treino */}
             <select
               defaultValue=""
               onChange={(e) => handleSelect(e.target.value)}
@@ -180,7 +174,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
               ))}
             </select>
 
-            {/* Lista de Exercícios */}
             {treinoSelecionado && (
               <div style={{ marginTop: "20px" }}>
                 {loadingExercicios ? (
@@ -189,7 +182,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
                   <div className={styles.tabelaTreino}>
                     {exercicios.map((data, index) => {
                       if (!data) return null;
-
                       const nome = data.name || `Exercício ${index + 1}`;
                       const grupo = data.grupo_muscular || "Grupo muscular";
                       const series = seriesTreino[index]?.series || "-";
@@ -221,10 +213,7 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
                           </div>
 
                           <div className={styles.wrapperButtons}>
-                            <button
-                              className={styles.btnPlay}
-                              aria-label={`Ver tutorial de ${nome}`}
-                            >
+                            <button className={styles.btnPlay}>
                               <img
                                 className={styles.image}
                                 src="/img/play.svg"
@@ -270,6 +259,38 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
           </>
         )}
       </div>
+
+      {mostrarModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Finalizar treino?</h3>
+            <p>
+              Você concluiu {dadosModal.concluido} de {dadosModal.total}{" "}
+              exercícios.
+              <br />
+              Deseja realmente finalizar o treino?
+            </p>
+            <div className={styles.modalButtons}>
+              <button
+                className={styles.btnCancelar}
+                onClick={() => setMostrarModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className={styles.btnConfirmar}
+                onClick={() => {
+                  setMostrarModal(false);
+                  setContinuarFinalizar(true);
+                  finalizarTreino(); // chama novamente, agora confirmando
+                }}
+              >
+                Finalizar mesmo assim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

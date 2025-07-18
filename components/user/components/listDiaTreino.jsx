@@ -68,8 +68,12 @@ export default function ListDiaTreino() {
         {data.map((d, i) => (
           <div key={i} className={styles.wrapperDia}>
             <div className={styles.dianumber}>{d.dia}</div>
-            <div className={`${styles.dia} ${d.isHoje ? styles.inativo : ""}`}>
-              <div className={styles.iconLinks}>
+            <div
+              className={`${styles.dia} ${d.isHoje ? styles.inativo : ""} ${
+                d.treino ? styles.verde : ""
+              }`}
+            >
+              <div className={`${styles.iconLinks}`}>
                 {d.treino ? (
                   <Check color="white" size={16} strokeWidth={3} />
                 ) : (

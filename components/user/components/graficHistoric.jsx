@@ -3,7 +3,7 @@ import styles from "./GraficHistoric.module.css";
 
 export default function GraficHistoric(){
   const diasSemana = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
-  const hoje = new Date();
+  const hoje = new Date(); 
 
   // Gera os últimos 7 dias + hoje
   const dias = Array.from({ length: 8 }, (_, i) => {
