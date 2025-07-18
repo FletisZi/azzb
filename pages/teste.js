@@ -1,19 +1,10 @@
-import dynamic from "next/dynamic";
+import MeuVideo from "components/user/components/tutorialVideo";
 
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
-
-export default function Teste() {
+export default function Home() {
   return (
-    <div style={{ maxWidth: "600px", margin: "20px auto" }}>
-      <h1>Teste Player</h1>
-      <div style={{ backgroundColor: "black" }}>
-        <ReactPlayer
-          url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Vídeo padrão de teste
-          controls
-          width="100%"
-          height="360px"
-        />
-      </div>
+    <div>
+      <h1>Meu vídeo do YouTube</h1>
+      <MeuVideo />
     </div>
   );
 }

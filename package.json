@@ -23,6 +23,7 @@
     "next": "^15.3.4",
     "pg": "^8.16.2",
     "react-player": "^3.3.1",
+    "react-youtube": "^10.1.0",
     "recharts": "^3.0.2"
   }
 }
