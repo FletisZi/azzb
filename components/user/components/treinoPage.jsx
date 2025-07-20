@@ -6,7 +6,12 @@ import BuscarListaExercicio from "controller/buscar-lista-exercicio";
 import BuscarDadosExercicio from "controller/buscar-dados-exercicio";
 import { Check } from "lucide-react";
 
-export default function TreinoPage({ setActiveComponent, setToast }) {
+export default function TreinoPage({
+  setActiveComponent,
+  setToast,
+  solicitarFinalizacao,
+  continuarFinalizar,
+}) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -16,9 +21,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
   const [seriesTreino, setSeriesTreino] = useState([]);
   const [exercicios, setExercicios] = useState([]);
   const [exerciciosConcluidos, setExerciciosConcluidos] = useState({});
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [dadosModal, setDadosModal] = useState({ total: 0, concluido: 0 });
-  const [continuarFinalizar, setContinuarFinalizar] = useState(false);
 
   useEffect(() => {
     if (!router.isReady || !router.query.id) return;
@@ -77,7 +79,7 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     }));
   }, []);
 
-  async function finalizarTreino() {
+  function handleFinalizarTreino() {
     const concluido = Object.entries(exerciciosConcluidos)
       .filter(([_, feito]) => feito)
       .map(([nome]) => nome);
@@ -85,61 +87,12 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
     const totalExercicios = Object.keys(exerciciosConcluidos).length;
     const totalConcluidos = concluido.length;
 
-    if (totalConcluidos < totalExercicios && !continuarFinalizar) {
-      setDadosModal({ total: totalExercicios, concluido: totalConcluidos });
-      setMostrarModal(true);
-      return;
-    }
-
-    setContinuarFinalizar(false);
-
-    const dataHoje = getDataHojeSaoPaulo();
-    const token = localStorage.getItem("token");
-    const id_client = router.query.id;
-
-    if (!token || !treinoSelecionado || !id_client) {
-      alert("Faltam dados necessários para finalizar o treino.");
-      return;
-    }
-
-    const payload = {
-      id_client: parseInt(id_client),
-      id_rotina: treinoSelecionado.id,
-      data: dataHoje,
-      exercicios_concluidos: concluido,
-      token,
-    };
-
-    try {
-      const response = await fetch("/api/client/insert-treino", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const erro = await response.text();
-        console.error("Erro ao salvar treino:", erro);
-        alert("Erro ao finalizar treino.");
-        return;
-      }
-
-      setToast({
-        mensagem: "✅ Treino finalizado com sucesso!",
-        tipo: "sucesso",
-      });
-
-      setActiveComponent("treino");
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-      alert("Erro na conexão com o servidor.");
-    }
-  }
-
-  function getDataHojeSaoPaulo() {
-    const agora = new Date();
-    const dataBrasil = new Date(agora.getTime() - 3 * 60 * 60 * 1000);
-    return dataBrasil.toISOString().split("T")[0];
+    solicitarFinalizacao({
+      concluido,
+      totalExercicios,
+      totalConcluidos,
+      treinoSelecionado,
+    });
   }
 
   return (
@@ -247,7 +200,7 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
                     })}
 
                     <button
-                      onClick={finalizarTreino}
+                      onClick={handleFinalizarTreino}
                       className={styles.btnFinalizar}
                     >
                       Finalizar Treino
@@ -259,38 +212,6 @@ export default function TreinoPage({ setActiveComponent, setToast }) {
           </>
         )}
       </div>
-
-      {mostrarModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h3>Finalizar treino?</h3>
-            <p>
-              Você concluiu {dadosModal.concluido} de {dadosModal.total}{" "}
-              exercícios.
-              <br />
-              Deseja realmente finalizar o treino?
-            </p>
-            <div className={styles.modalButtons}>
-              <button
-                className={styles.btnCancelar}
-                onClick={() => setMostrarModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className={styles.btnConfirmar}
-                onClick={() => {
-                  setMostrarModal(false);
-                  setContinuarFinalizar(true);
-                  finalizarTreino(); // chama novamente, agora confirmando
-                }}
-              >
-                Finalizar mesmo assim
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

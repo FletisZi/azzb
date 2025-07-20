@@ -22,22 +22,123 @@ export default function Users() {
   const [dataIndex, setDataIndex] = useState("");
   const [toast, setToast] = useState(null);
 
-  // Responsável por renderizar o componente certo com base no estado
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [dadosModal, setDadosModal] = useState({ total: 0, concluido: 0 });
+  const [continuarFinalizar, setContinuarFinalizar] = useState(false);
+
+  const [dadosParaFinalizar, setDadosParaFinalizar] = useState(null);
+
   const renderComponent = () => {
-    if (activeComponent === "") return <UserHome setActiveComponent={setActiveComponent} />;
-    if (activeComponent === "treino") return <TreinoHome setActiveComponent={setActiveComponent} />;
-    if (activeComponent === "dieta") return <DietaHome setActiveComponent={setActiveComponent} />;
-    if (activeComponent === "evolucao") return <EvolucaoHome setActiveComponent={setActiveComponent} />;
-    if (activeComponent === "graficDieta") return <GraficHeader setActiveComponent={setActiveComponent} setDataIndex={setDataIndex} />;
-    if (activeComponent === "cadastroDieta") return <DietaCadastro setActiveComponent={setActiveComponent} />;
-    if (activeComponent === "editDietas") return <EditConsumoDiario setActiveComponent={setActiveComponent} index={dataIndex} setToast={setToast} />;
-    if (activeComponent === "configuracao") return <ConfigureHome setActiveComponent={setActiveComponent} setToast={setToast} />;
-    if (activeComponent === "treinopage") return <TreinoPage setActiveComponent={setActiveComponent} setToast={setToast} />;
+    if (activeComponent === "")
+      return <UserHome setActiveComponent={setActiveComponent} />;
+    if (activeComponent === "treino")
+      return <TreinoHome setActiveComponent={setActiveComponent} />;
+    if (activeComponent === "dieta")
+      return <DietaHome setActiveComponent={setActiveComponent} />;
+    if (activeComponent === "evolucao")
+      return <EvolucaoHome setActiveComponent={setActiveComponent} />;
+    if (activeComponent === "graficDieta")
+      return (
+        <GraficHeader
+          setActiveComponent={setActiveComponent}
+          setDataIndex={setDataIndex}
+        />
+      );
+    if (activeComponent === "cadastroDieta")
+      return <DietaCadastro setActiveComponent={setActiveComponent} />;
+    if (activeComponent === "editDietas")
+      return (
+        <EditConsumoDiario
+          setActiveComponent={setActiveComponent}
+          index={dataIndex}
+          setToast={setToast}
+        />
+      );
+    if (activeComponent === "configuracao")
+      return (
+        <ConfigureHome
+          setActiveComponent={setActiveComponent}
+          setToast={setToast}
+        />
+      );
+
+    if (activeComponent === "treinopage")
+      return (
+        <TreinoPage
+          setActiveComponent={setActiveComponent}
+          setToast={setToast}
+          solicitarFinalizacao={prepararFinalizacao}
+          continuarFinalizar={continuarFinalizar}
+        />
+      );
+
     return null;
   };
 
+  const prepararFinalizacao = (dados) => {
+    const { totalExercicios, totalConcluidos } = dados;
+
+    if (totalConcluidos < totalExercicios && !continuarFinalizar) {
+      setDadosModal({ total: totalExercicios, concluido: totalConcluidos });
+      setMostrarModal(true);
+      setDadosParaFinalizar(dados);
+    } else {
+      finalizarTreino(dados);
+    }
+  };
+
+  const finalizarTreino = async (dados) => {
+    setMostrarModal(false);
+    setContinuarFinalizar(false);
+
+    const { concluido, treinoSelecionado } = dados;
+
+    const dataHoje = new Date(Date.now() - 3 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0];
+
+    const token = localStorage.getItem("token");
+    const id_client = router.query.id;
+
+    if (!token || !treinoSelecionado || !id_client) {
+      alert("Faltam dados necessários para finalizar o treino.");
+      return;
+    }
+
+    const payload = {
+      id_client: parseInt(id_client),
+      id_rotina: treinoSelecionado.id,
+      data: dataHoje,
+      exercicios_concluidos: concluido,
+      token,
+    };
+
+    try {
+      const response = await fetch("/api/client/insert-treino", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const erro = await response.text();
+        console.error("Erro ao salvar treino:", erro);
+        alert("Erro ao finalizar treino.");
+        return;
+      }
+
+      setToast({
+        mensagem: "✅ Treino finalizado com sucesso!",
+        tipo: "sucesso",
+      });
+      setActiveComponent("treino");
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      alert("Erro na conexão com o servidor.");
+    }
+  };
+
   useEffect(() => {
-    // Impede a execução no servidor durante o build
     if (typeof window === "undefined" || !router.isReady) return;
 
     const token = localStorage.getItem("token");
@@ -66,11 +167,8 @@ export default function Users() {
       return;
     }
 
-    // Validação com o backend para garantir autenticidade
     fetch("/api/client/auth/verify-token", {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
+      headers: { authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (res.ok) {
@@ -84,10 +182,8 @@ export default function Users() {
         localStorage.removeItem("token");
         router.push("/users/login");
       });
-
   }, [router.isReady, router.query.id]);
 
-  // Só renderiza o conteúdo se estiver autorizado
   if (!authorized) return null;
 
   return (
@@ -99,12 +195,41 @@ export default function Users() {
           onClose={() => setToast(null)}
         />
       )}
-      <div className={styles.wrapper}>
-        {renderComponent()}
-      </div>
-      <div className={styles.marginBot}>
 
-      </div>
+      {mostrarModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Finalizar treino?</h3>
+            <p>
+              Você concluiu {dadosModal.concluido} de {dadosModal.total}{" "}
+              exercícios.
+              <br />
+              Deseja realmente finalizar o treino?
+            </p>
+            <div className={styles.modalButtons}>
+              <button
+                className={styles.btnCancelar}
+                onClick={() => setMostrarModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className={styles.btnConfirmar}
+                onClick={() => {
+                  setMostrarModal(false);
+                  setContinuarFinalizar(true);
+                  finalizarTreino(dadosParaFinalizar);
+                }}
+              >
+                Finalizar mesmo assim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className={styles.wrapper}>{renderComponent()}</div>
+      <div className={styles.marginBot}></div>
     </div>
   );
 }

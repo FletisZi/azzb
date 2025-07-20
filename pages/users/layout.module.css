@@ -1,40 +1,80 @@
-.container{
-    width: 100vw;
-    height: 100vh;
-    background-image: url('/img/bckgDesktop.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    position: fixed;
-    overflow: auto;
+.container {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("/img/bckgDesktop.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: fixed;
+  overflow: auto;
 }
-.wrapper{
-    background-color: #ffffff26;
-    width: 90%;
-    max-width: 920px;
-    min-height: 500px;
-    position: relative;
-    top: 4rem;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius:20px;
-    box-shadow: 0px 3px 10px 3px rgb(70 65 65 / 25%);
-    padding: 1.25rem 0;
-    margin-bottom: 10rem;
-}
-
-
-@media(max-width: 600px) {
-    .container{
-    background-image: url('/img/bckgMobile.png');
+.wrapper {
+  background-color: #ffffff26;
+  width: 90%;
+  max-width: 920px;
+  min-height: 500px;
+  position: relative;
+  top: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  box-shadow: 0px 3px 10px 3px rgb(70 65 65 / 25%);
+  padding: 1.25rem 0;
+  margin-bottom: 10rem;
 }
 
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-family: "Montserrat", sans-serif;
 }
 
-@media(max-height: 650px) {
+.modalContent {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 400px;
+  text-align: center;
+}
 
-    .wrapper{
-        top: 2.5rem;
-    }
+.modalButtons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
 
+.btnCancelar {
+  background: #ccc;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+.btnConfirmar {
+  background: #4aa7b0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    background-image: url("/img/bckgMobile.png");
+  }
+}
+
+@media (max-height: 650px) {
+  .wrapper {
+    top: 2.5rem;
+  }
 }

@@ -1,0 +1,8 @@
+.videoContainerVertical {
+  position: relative;
+  width: 100%; /* ocupa toda a largura disponível */
+  max-width: 400px; /* limite opcional para desktop */
+  aspect-ratio: 9/16; /* proporção vertical (em pé) */
+  margin: 0 auto; /* centraliza */
+  background: #000; /* fundo preto opcional para loading */
+}
