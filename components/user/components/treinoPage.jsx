@@ -5,7 +5,6 @@ import Logo from "components/logo";
 import BuscarListaExercicio from "controller/buscar-lista-exercicio";
 import BuscarDadosExercicio from "controller/buscar-dados-exercicio";
 import { Check } from "lucide-react";
-import e from "express";
 
 export default function TreinoPage({
   setActiveComponent,
@@ -152,6 +151,9 @@ export default function TreinoPage({
                         seriesTreino[index]?.observacao ||
                         "Descrição do exercício...";
 
+                      {
+                        console.log(data.ur_video);
+                      }
                       return (
                         <div className={styles.linha} key={data.id || index}>
                           <div className={styles.titleCards}>
@@ -177,7 +179,7 @@ export default function TreinoPage({
                           <div className={styles.wrapperButtons}>
                             <button
                               className={styles.btnPlay}
-                              onClick={() => abrirVideo("1103451910")}
+                              onClick={() => abrirVideo(data.ur_video)}
                             >
                               <img
                                 className={styles.image}
