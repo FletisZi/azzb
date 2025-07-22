@@ -5,12 +5,16 @@ import Logo from "components/logo";
 import BuscarListaExercicio from "controller/buscar-lista-exercicio";
 import BuscarDadosExercicio from "controller/buscar-dados-exercicio";
 import { Check } from "lucide-react";
+import e from "express";
 
 export default function TreinoPage({
   setActiveComponent,
   setToast,
   solicitarFinalizacao,
   continuarFinalizar,
+  setVideoStatus,
+  setIdVideo,
+  idVideo,
 }) {
   const router = useRouter();
 
@@ -95,6 +99,11 @@ export default function TreinoPage({
     });
   }
 
+  const abrirVideo = (idvideo) => {
+    setIdVideo(idvideo);
+    setVideoStatus(true);
+  };
+
   return (
     <>
       <div className={styles.header}>
@@ -166,7 +175,10 @@ export default function TreinoPage({
                           </div>
 
                           <div className={styles.wrapperButtons}>
-                            <button className={styles.btnPlay}>
+                            <button
+                              className={styles.btnPlay}
+                              onClick={() => abrirVideo("1103451910")}
+                            >
                               <img
                                 className={styles.image}
                                 src="/img/play.svg"

@@ -13,6 +13,7 @@ import EditConsumoDiario from "components/user/components/editConsumoDiario";
 import Toast from "components/admin/toast";
 import ConfigureHome from "components/user/configureHome";
 import TreinoPage from "components/user/components/treinoPage";
+import MeuVideo from "components/user/components/tutorialVideo";
 
 export default function Users() {
   const router = useRouter();
@@ -27,6 +28,9 @@ export default function Users() {
   const [continuarFinalizar, setContinuarFinalizar] = useState(false);
 
   const [dadosParaFinalizar, setDadosParaFinalizar] = useState(null);
+
+  const [videoStatus, setVideoStatus] = useState(false);
+  const [idVideo, setIdVideo] = useState("");
 
   const renderComponent = () => {
     if (activeComponent === "")
@@ -69,6 +73,9 @@ export default function Users() {
           setToast={setToast}
           solicitarFinalizacao={prepararFinalizacao}
           continuarFinalizar={continuarFinalizar}
+          setVideoStatus={setVideoStatus}
+          setIdVideo={setIdVideo}
+          idVideo={idVideo}
         />
       );
 
@@ -226,6 +233,10 @@ export default function Users() {
             </div>
           </div>
         </div>
+      )}
+
+      {videoStatus && (
+        <MeuVideo idvideo={idVideo} setVideoStatus={setVideoStatus} />
       )}
 
       <div className={styles.wrapper}>{renderComponent()}</div>
