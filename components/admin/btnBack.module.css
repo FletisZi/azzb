@@ -1,0 +1,18 @@
+.container {
+  width: 90%;
+  display: flex;
+  justify-content: end;
+}
+.button {
+  background-color: #00000000;
+  border: none;
+  cursor: pointer;
+}
+
+.button svg:hover {
+  transition: 0.2s ease;
+}
+
+.button svg:hover {
+  transform: scale(1.2);
+}

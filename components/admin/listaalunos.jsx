@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styles from "./listaalunos.module.css";
+import BtnBack from "./btnBack";
 
-export default function ListaAlunos() {
+export default function ListaAlunos({ setActiveComponent }) {
   const [alunos, setAlunos] = useState([]);
   const [filtro, setFiltro] = useState("");
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function ListaAlunos() {
 
   return (
     <div className={styles.container}>
+      <BtnBack link={""} setActiveComponent={setActiveComponent} />
       <h1 className={styles.titulo}>Lista de Alunos</h1>
 
       <input

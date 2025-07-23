@@ -1,0 +1,31 @@
+import { FaDollarSign, FaUser } from "react-icons/fa";
+import styles from "./areaMain.module.css";
+import { useRouter } from "next/router";
+
+export default function AreaMain({ setActiveComponent }) {
+  const router = useRouter();
+
+  return (
+    <div className={styles.mainArea}>
+      <div
+        className={styles.card}
+        onClick={(e) => {
+          e.preventDefault;
+          setActiveComponent("listaalunos");
+        }}
+      >
+        <FaUser className={styles.cardIcon} />
+        Editar
+        <br />
+        Alunos
+      </div>
+
+      <div className={styles.card}>
+        <FaDollarSign className={styles.cardIcon} />
+        Área
+        <br />
+        Financeira
+      </div>
+    </div>
+  );
+}

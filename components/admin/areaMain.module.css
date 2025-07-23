@@ -1,0 +1,34 @@
+.mainArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  gap: 30px;
+}
+
+.card {
+  background-color: #f4f7fa;
+  width: 180px;
+  height: 180px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  box-shadow: 0 4px 10px 1px rgb(0 0 0 / 25%);
+  cursor: pointer;
+  transition: 0.2s linear;
+}
+
+.card:hover {
+  box-shadow: 0 4px 10px 2px rgb(0 0 0 / 35%);
+}
+
+.cardIcon {
+  font-size: 50px;
+  color: #90cdf4;
+  margin-bottom: 15px;
+}

@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  background-color: #edf3fc;
+  height: 100vh;
+  padding: 0 20px;
+  font-family: "Montserrat", sans-serif;
+  flex-direction: column;
+}
+
+.containerSection {
+  display: flex;
+  height: 80%;
+}
+
+.header {
+  width: 100%;
+}
+
+.logoutButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #007aff;
+  color: white;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 10px;
+  color: #000;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
