@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const [values, setValues] = useState(null);
 
-  const data_matricula = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +35,7 @@ export default function Home() {
     <div>
       {/* Renderize os valores conforme necessário */}
       {values && <pre>{JSON.stringify(values, null, 2)}</pre>}
-      {data_matricula}
+
     </div>
   );
 }
