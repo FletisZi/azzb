@@ -15,8 +15,6 @@ export default function AreaMain({ setActiveComponent }) {
         }}
       >
         <FaUser className={styles.cardIcon} />
-        Editar
-        <br />
         Alunos
       </div>
 

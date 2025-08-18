@@ -1,3 +1,4 @@
+import HomeFinancas from "components/admin/financa/home";
 import MeuVideo from "components/user/components/tutorialVideo";
 import { CircleX } from "lucide-react";
 import { useState } from "react";
@@ -11,13 +12,7 @@ export default function Home() {
 
   return (
     <div>
-      {" "}
-      {videoStatus && (
-        <MeuVideo idvideo={idVideo} setVideoStatus={setVideoStatus} />
-      )}{" "}
-      <button onClick={abrirVideo}>
-        <CircleX color={"#ffffff"} />
-      </button>
+      <HomeFinancas />
     </div>
   );
 }

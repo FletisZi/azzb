@@ -1,3 +1,13 @@
+.layoutContainer{
+    display: flex;
+    background-color: #edf3fc;
+    height: 100vh;
+    padding: 0 20px;
+    font-family: "Montserrat", sans-serif;
+    flex-direction: column;
+        overflow: auto;
+}
+
 .container {
   padding: 20px;
 }

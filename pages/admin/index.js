@@ -77,7 +77,7 @@ export default function HomeAdmin() {
       <div className={styles.containerSection}>
         <Sidebar setActiveComponent={setActiveComponent} />
 
-        {renderComponent()}
+        {renderComponent()} 
       </div>
     </div>
   );

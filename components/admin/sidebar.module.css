@@ -39,3 +39,11 @@
   margin-right: 10px;
   color: #90cdf4;
 }
+
+
+@media(max-width: 800px) {
+
+    .sidebar{
+        display: none;
+    }
+}

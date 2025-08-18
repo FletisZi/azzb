@@ -5,6 +5,7 @@ import Toast from "/components/admin/toast";
 import { Montserrat } from "next/font/google";
 import Header from "components/admin/header";
 import { BookPlus, FolderSymlink } from "lucide-react";
+import Sidebar from "components/admin/sidebar";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -107,9 +108,11 @@ export default function EditarAluno() {
   if (!aluno) return <p>Aluno não encontrado.</p>;
 
   return (
-    <>
+    <div className={styles.layoutContainer}> 
       <Header url="" />
-      <div className={`${montserrat.variable} ${styles.container}`}>
+
+      <div className={`${montserrat.variable} ${styles.containerSection} `}>
+
         {toast && (
           <Toast
             mensagem={toast.mensagem}
@@ -117,59 +120,62 @@ export default function EditarAluno() {
             onClose={() => setToast(null)}
           />
         )}
+        <Sidebar  />
 
-        <h1 className={styles.titulo}>Editar Perfil de {aluno.name}</h1>
+        <div className={styles.container}>
+          <h1 className={styles.titulo}>Editar Perfil de {aluno.name}</h1>
 
-        <form className={styles.form} onSubmit={atualizarCliente}>
-          {mensagem && <p>{mensagem}</p>}
+          <form className={styles.form} onSubmit={atualizarCliente}>
+            {mensagem && <p>{mensagem}</p>}
 
-          <div className={styles.campo}>
-            <label>Nome</label>
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.campo}>
-            <label>Nova Senha</label>
-            <input
-              type="password"
-              placeholder="Digite a nova senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-          </div>
-          <div className={styles.wrapersLinksEdits}>
-            <div className={styles.conteinerButtons}>
-              <label className={styles.label}>Dieta</label>
-              <button
-                type="button"
-                onClick={() => router.push(`/admin/alunos/dieta/${id}`)}
-                className={styles.btnLinks}
-              >
-                <BookPlus strokeWidth={2} size={22} color="#FFF" />
-              </button>
+            <div className={styles.campo}>
+              <label>Nome</label>
+              <input
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
             </div>
 
-            <div className={styles.conteinerButtons}>
-              <label className={styles.label}>Treinos</label>
-              <button
-                type="button"
-                onClick={() => router.push(`/admin/alunos/treino/${id}`)}
-                className={styles.btnLinks}
-              >
-                <FolderSymlink strokeWidth={2} size={22} color="#FFF" />
-              </button>
+            <div className={styles.campo}>
+              <label>Nova Senha</label>
+              <input
+                type="password"
+                placeholder="Digite a nova senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
             </div>
-          </div>
+            <div className={styles.wrapersLinksEdits}>
+              <div className={styles.conteinerButtons}>
+                <label className={styles.label}>Dieta</label>
+                <button
+                  type="button"
+                  onClick={() => router.push(`/admin/alunos/dieta/${id}`)}
+                  className={styles.btnLinks}
+                >
+                  <BookPlus strokeWidth={2} size={22} color="#FFF" />
+                </button>
+              </div>
 
-          <button type="submit" className={styles.botao}>
-            Salvar Alterações
-          </button>
-        </form>
+              <div className={styles.conteinerButtons}>
+                <label className={styles.label}>Treinos</label>
+                <button
+                  type="button"
+                  onClick={() => router.push(`/admin/alunos/treino/${id}`)}
+                  className={styles.btnLinks}
+                >
+                  <FolderSymlink strokeWidth={2} size={22} color="#FFF" />
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" className={styles.botao}>
+              Salvar Alterações
+            </button>
+          </form>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

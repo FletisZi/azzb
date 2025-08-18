@@ -57,15 +57,12 @@ export default function Dieta() {
   }
 
   return (
-    <>
+    <div className={styles.layoutContainer}>
+      
       <Header url="" />
 
       <EditMetas />
 
-      {/* Exemplo de uso do insertRefeicao (botão de teste) */}
-      <button onClick={insertRefeicao} disabled={!idClient}>
-        Enviar dieta
-      </button>
-    </>
+    </div>
   );
 }
