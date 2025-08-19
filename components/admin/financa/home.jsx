@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import styles from "./home.module.css"
-export default function HomeFinancas(){
+
+export default function HomeFinancas({totalAtivos, aVencer, atrasados}){
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
 
@@ -16,7 +17,7 @@ export default function HomeFinancas(){
 
                 <div className={`${styles.CardsInformation } ${styles.Azul}`}>
                     <div className={styles.CardsWapperNumber}>
-                        <div className={styles.CardsNumber}>256</div>
+                        <div className={styles.CardsNumber}>{totalAtivos}</div>
                         <div className={styles.CardsNumberInformation}>(Alunos)</div>
                     </div>
                     <div className={styles.CardsSobre}>Total Ativos</div>
@@ -24,7 +25,7 @@ export default function HomeFinancas(){
 
                 <div className={`${styles.CardsInformation } ${styles.Verde}`}>
                     <div className={styles.CardsWapperNumber}>
-                        <div className={styles.CardsNumber}>124</div>
+                        <div className={styles.CardsNumber}>{aVencer}</div>
                         <div className={styles.CardsNumberInformation}>(Alunos)</div>
                     </div>
                     <div className={styles.CardsSobre}>A vencer</div>
@@ -32,7 +33,7 @@ export default function HomeFinancas(){
 
                 <div className={`${styles.CardsInformation } ${styles.Vermelho}`}>
                     <div className={styles.CardsWapperNumber}>
-                        <div className={styles.CardsNumber}>4</div>
+                        <div className={styles.CardsNumber}>{atrasados}</div>
                         <div className={styles.CardsNumberInformation}>(Alunos)</div>
                     </div>
                     <div className={styles.CardsSobre}>Atrasados</div>
