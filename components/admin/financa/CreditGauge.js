@@ -111,18 +111,19 @@ export default function GraficHeader() {
   }, [data]);
 
     
+  console.log("Dados do gráfico:", data);
 
   if (!data) {
     return <div>Carregando gráfico...</div>;
   }
-
+  console.log("Dados do gráfico:", data);
   const valueCredito = 300;
   const valueDebito = 700;
 
   return (
     <div className={styles.container}>
       <div className={styles.containerHeader}>
-        
+        {console.log("Dados do gráfico:", data)}
         {/* Gráfico 1 */}
         <div className={styles.containerCenter}>
           <canvas ref={chartRef1} />
