@@ -34,7 +34,7 @@ export default async function statusMensalidades(req, res) {
       SELECT
         (SELECT COUNT(*) FROM mensalidades WHERE EXTRACT(MONTH FROM data_vencimento) = $1 AND status = 'paga') AS mensalidades_pagas,
         (SELECT COUNT(*) FROM mensalidades WHERE EXTRACT(MONTH FROM data_vencimento) = $1 AND status = 'a vencer') AS mensalidades_a_vencer,
-        (SELECT COUNT(*) FROM mensalidades WHERE EXTRACT(MONTH FROM data_vencimento) = $1 AND status = 'atrasada') AS mensalidades_atraso,
+        (SELECT COUNT(*) FROM mensalidades WHERE EXTRACT(MONTH FROM data_vencimento) <= $1 AND status = 'atrasada') AS mensalidades_atraso,
         (SELECT COUNT(*) FROM clients WHERE status = true) AS alunos_ativos
     `;
 
