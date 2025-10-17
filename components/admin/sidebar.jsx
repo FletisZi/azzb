@@ -4,6 +4,7 @@ import { FaUser } from 'react-icons/fa';
 import { CircleDollarSign } from 'lucide-react';
 import { useRouter } from 'next/router';
 
+
 export default function Sidebar({setActiveComponent}){
     const router = useRouter();
 
@@ -18,7 +19,7 @@ export default function Sidebar({setActiveComponent}){
           </div>
 
           <div className={styles.menuItem}>
-            <CircleDollarSign size={50} color={'#A6DDFE'} className={styles.menuIcon} />
+            <CircleDollarSign size={50} color={'#A6DDFE'} className={styles.menuIcon} onClick={(e )=>{e.preventDefault; router.push(`/admin/financas`);}}/>
             Finanças
           </div>
         </div>

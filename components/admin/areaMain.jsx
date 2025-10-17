@@ -18,11 +18,9 @@ export default function AreaMain({ setActiveComponent }) {
         Alunos
       </div>
 
-      <div className={styles.card}>
+      <div className={styles.card} onClick={()=>{router.push('/admin/financas')}}>
         <FaDollarSign className={styles.cardIcon} />
-        Área
-        <br />
-        Financeira
+        Finanças
       </div>
     </div>
   );

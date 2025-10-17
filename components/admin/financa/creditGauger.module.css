@@ -2,12 +2,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    width: 90vw;
+    /* width: 90vw; */
     margin: 0 auto;
 }
 
 .containerCenter{
 
+    width: 20vw;
+    height: auto;
     max-width: 300px;
     max-height: 300px;
     position: relative;

@@ -3,7 +3,7 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 16px;
-  background-color: #f4f7fa;
+  background-color: #f8fbff;
   border-radius: 15px;
   padding: 30px 20px;
   display: flex;
@@ -31,13 +31,15 @@
 .lista {
   list-style: none;
   padding: 0;
+  overflow: overlay;
   width: 95%;
+  padding: 8px 15px;
 }
 
 .item {
   display: flex;
   justify-content: space-between;
-  background-color: #f1f9ff;
+  background-color: #f8fbff;
   padding: 8px 12px;
   margin-bottom: 16px;
   border-radius: 10px;

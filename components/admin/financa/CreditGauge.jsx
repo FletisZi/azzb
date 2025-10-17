@@ -3,8 +3,11 @@ import Chart from "chart.js/auto";
 import styles from "./creditGauger.module.css";
 
 
-export default function GraficHeader() {
-  const [data, setData] = useState(null);
+export default function GraficHeader({data}) {
+
+  const totalValue = (data.debito + data.credito +data.pix);
+
+  console.log(totalValue)
 
   // refs para cada gráfico
   const chartRef1 = useRef(null);
@@ -23,6 +26,8 @@ export default function GraficHeader() {
   useEffect(() => {
     if (!data) return;
 
+    
+
     // ----------------- Gráfico 1 -----------------
     if (chartInstance1.current) chartInstance1.current.destroy();
     if (chartRef1.current) {
@@ -32,7 +37,7 @@ export default function GraficHeader() {
         data: {
           datasets: [
             {
-              data: [30, 70], // exemplo
+              data: [data.credito, totalValue], // exemplo
               backgroundColor: ["#0083FF", "#D9FC98"],
               borderWidth: 0,
               borderRadius: 30,
@@ -61,7 +66,7 @@ export default function GraficHeader() {
         data: {
           datasets: [
             {
-              data: [70, 30], // exemplo
+              data: [data.debito, totalValue], // exemplo
               backgroundColor: ["#0083FF", "#D9FC98"],
               borderWidth: 0,
               borderRadius: 30,
@@ -89,7 +94,7 @@ export default function GraficHeader() {
         data: {
           datasets: [
             {
-              data: [70, 30], // exemplo
+              data: [data.pix, totalValue], // exemplo
               backgroundColor: ["#0083FF", "#D9FC98"],
               borderWidth: 0,
               borderRadius: 30,
@@ -111,14 +116,12 @@ export default function GraficHeader() {
   }, [data]);
 
     
-  console.log("Dados do gráfico:", data);
+
 
   if (!data) {
     return <div>Carregando gráfico...</div>;
   }
-  console.log("Dados do gráfico:", data);
-  const valueCredito = 300;
-  const valueDebito = 700;
+
 
   return (
     <div className={styles.container}>
@@ -128,7 +131,7 @@ export default function GraficHeader() {
         <div className={styles.containerCenter}>
           <canvas ref={chartRef1} />
           <div className={styles.centerText}>
-            <div className={styles.number}>R$ {valueCredito}
+            <div className={styles.number}>R$ {data.credito}
             </div>
             <div className={styles.label}>Crédito</div>
           </div>
@@ -138,7 +141,7 @@ export default function GraficHeader() {
         <div className={styles.containerCenter}>
           <canvas ref={chartRef2} />
           <div className={styles.centerText}>
-            <div className={styles.number}>R$ {valueDebito}
+            <div className={styles.number}>R$ {data.debito}
             </div>
             <div className={styles.label}>Débito</div>
           </div>
@@ -147,7 +150,7 @@ export default function GraficHeader() {
         <div className={styles.containerCenter}>
           <canvas ref={chartRef3} />
           <div className={styles.centerText}>
-            <div className={styles.number}>R$ {valueDebito}
+            <div className={styles.number}>R$ {data.pix}
             </div>
             <div className={styles.label}>Pix</div>
           </div>

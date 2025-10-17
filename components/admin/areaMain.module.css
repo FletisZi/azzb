@@ -3,11 +3,12 @@
   justify-content: center;
   align-items: center;
   flex: 1;
+  flex-wrap: wrap;
   gap: 30px;
 }
 
 .card {
-  background-color: #f4f7fa;
+  background-color: #f8fbff;
   width: 180px;
   height: 180px;
   border-radius: 15px;

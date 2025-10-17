@@ -12,6 +12,22 @@
   height: 80%;
 }
 
+.containerCard{
+    font-family: "Montserrat", sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: #f8fbff;
+  border-radius: 15px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  max-width: 800px;
+  box-shadow: 0 4px 10px 1px rgb(0 0 0 / 25%);
+}
+
 .header {
   width: 100%;
 }
