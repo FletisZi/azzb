@@ -25,7 +25,7 @@ export default function (){
     useEffect(() => {
         const fetchData = async () => {
         const token = localStorage.getItem("token");
-        const mes = 8; // ou use new Date().getMonth() + 1
+        const mes = new Date().getMonth() + 1
         const status = "a vencer";
 
         console.log("Token:", token);

@@ -1,11 +1,6 @@
 
 import GraficHeader from "components/admin/financa/CreditGauge";
 import HomeFinancas from "components/admin/financa/home";
-<<<<<<< HEAD
-=======
-// import HomeFinancas from "components/admin/financa/home";
->>>>>>> 913107f65f203582033394d56d61ae7868a19c66
-
 import { CircleX } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -35,33 +30,14 @@ export default function Home() {
       const data = await response.json();
       setValues(data);
     };
-<<<<<<< HEAD
 
     fetchData();
   }, []);
-
-
-
   return (
     <div>
-      
       {values && <HomeFinancas totalAtivos={values.alunos_ativos} aVencer={values.mensalidades_a_vencer} atrasados={values.mensalidades_atraso}/>}
       <GraficHeader data={data}/>
       {/* {values && <pre>{JSON.stringify(values, null, 2)}</pre>} */}
-=======
-
-    fetchData();
-  }, []);
-
-console.log(values);
-
-  return (
-    <div>
-      {/* <GraficHeader /> */}
-      {values && <HomeFinancas totalAtivos={values.alunos_ativos} aVencer={values.mensalidades_a_vencer} atrasados={values.mensalidades_atraso}/>}
-      {values && <pre>{JSON.stringify(values, null, 2)}</pre>}
->>>>>>> 913107f65f203582033394d56d61ae7868a19c66
-
     </div>
   );
 }
