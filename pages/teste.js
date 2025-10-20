@@ -12,19 +12,13 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      const mes = 8; // ou use new Date().getMonth() + 1
-      const status = "a vencer";
 
-      console.log("Token:", token);
-
-      const response = await fetch("/api/admin/get-mensalidades", {
+      const response = await fetch("/api/v2/finaces/getValuesPayments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ mes }),
+        body: JSON.stringify({ dataInicio: '2023-12-31', dataFim: '2025-12-31', SEGREDOTOKEN: process.env.SEGREDOTOKEN }),
       });
 
       const data = await response.json();
@@ -35,9 +29,8 @@ export default function Home() {
   }, []);
   return (
     <div>
-      {values && <HomeFinancas totalAtivos={values.alunos_ativos} aVencer={values.mensalidades_a_vencer} atrasados={values.mensalidades_atraso}/>}
-      <GraficHeader data={data}/>
-      {/* {values && <pre>{JSON.stringify(values, null, 2)}</pre>} */}
+      {console.log(values)}
+      {values && <pre>{JSON.stringify(values, null, 2)}</pre>}
     </div>
   );
 }
