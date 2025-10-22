@@ -8,7 +8,7 @@
 
 .containerCenter{
 
-    width: 20vw;
+    width: 12vw;
     height: auto;
     max-width: 300px;
     max-height: 300px;
@@ -30,7 +30,7 @@
 }
 
 .number{
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: #514E4E;
 }
@@ -39,4 +39,33 @@
     font-size: 1rem;
     font-weight: 700;
     color: #9D9999;
+}
+
+@media(max-width: 900px) {
+    .number{
+        font-size: 0.75rem;
+    }
+    .label{
+        font-size: 0.85rem;
+    }
+}
+
+@media(max-width: 600px) {
+    .number{
+        font-size: 0.55rem;
+    }
+    .label{
+        font-size: 0.65rem;
+    }
+    
+}
+
+@media(max-width: 420px) {
+    .number{
+        font-size: 0.45rem;
+    }
+    .label{
+        font-size: 0.45rem;
+    }
+    
 }
