@@ -15,9 +15,6 @@ export default async function getValuesPayments(req, res) {
         return res.status(400).json({ error: "Parâmetros dataInicio e dataFim são obrigatórios" });
     }
 
-
-    // const dataInicio = '2023-12-31';
-    // const dataFim = '2025-12-31';
   try {
     const result = await database.query({
         text: `
