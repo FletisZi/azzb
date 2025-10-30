@@ -1,0 +1,40 @@
+.conteiner{
+    width: 252px;
+    height: 94px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgb(00, 00, 00,0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wrapper{
+    width: 65%;
+    margin: 0 auto;
+}
+
+.text{
+    font-family: 'Montserrat',sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+
+.value{
+    font-family: 'Montserrat',sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.colorIcon{
+    width: 46px;
+    height: 94px;
+    border-radius: 0px 15px 15px 0px;
+    background-color: #0083FF;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+
+}

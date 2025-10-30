@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./FiltroPagamentos.module.css";
+import CardValuesShows from "components/admin/financa/cardValuesShows";
+import { Landmark } from "lucide-react";
 
 export default function FiltroPagamentos() {
   const [periodo, setPeriodo] = useState("mesAtual");
@@ -150,6 +152,12 @@ export default function FiltroPagamentos() {
       ) : (
         <p className={styles.info}>Nenhum dado encontrado.</p>
       )}
+      <CardValuesShows text={'Despesas'} value={0} colorBK="#000" urlLink={'/teste'}>
+        <Landmark size={24} color="#FFF" strokeWidth={2}/>
+      </CardValuesShows>
+      
     </div>
+
+    
   );
 }
